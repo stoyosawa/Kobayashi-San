@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body.kobayashi {
+      background-color: #FDE93E;
+    }
+    div.screen {
+      width: 640px;
+      height: 360px;
+      position: relative;
+      /* border-style: dotted; */           /* Framing this div. For debugging. */
+      border-color: gray;
+    }
+    p.eyecatch {
+      color: #101010;
+      font-size: 62px;
+      font-family: FranklinGothicBook, sans-serif;
+      font-weight: bold;
+      letter-spacing: 43px;
+      margin: 0 0 0 0;
+      padding: 0 0 0 0;
+      position: absolute;
+      top: 138px;
+      left: 170px;
+    }
+  </style>
+</head>
+<body class="kobayashi">
+  <div class="screen">
+    <p class="eyecatch" id="eyecatch"></p>
+  </div>
+  <select id="dragonOptions"></select>
+
+  <script>
+    let pElement = document.getElementById('eyecatch');
+    let selectElement = document.getElementById('dragonOptions');
+    let sound = new Audio('240701-beep.mp3');
+
+    const eyecatches = {
+      '第3話A': '←↙↓↘→',                    // gaming buttons at 16:20
+      '第3話B': 'A+B+C',                     // ditto at 21:41
+      '第4話A': '▲+▼=◆',                    // ? at 15:07
+      '第4話B': '∧+∨=×',                    // ? at 21:25
+      '第5話A': 'if(){',                     // programming (somehow, not Python) at 15:03
+      '第5話B': '.name'                      // a property or TLD at 21:22
+    }
+
+    // Autogenerate <option> from a dict of {reference: eyecatch-string}.
+    function populateOptions(elementId, stringDict, selectedName='第5話A') {
+      let selectElement = document.getElementById(elementId);
+      Object.keys(stringDict).forEach(function(dragon) {
+        let element = document.createElement('option');
+        element.value = dragon;
+        element.innerHTML = dragon;
+        if (selectedName == dragon)
+          element.selected = true; 
+        selectElement.appendChild(element);
+
+      });
+    }
+
+    // Run the eyecatch
+    function runEyecatch(evt) {
+      let text = eyecatches[selectElement.value];
+      let letters = text.split('');
+      console.log(selectElement.value, letters);
+
+      let counter = 0;
+      let timerId = setInterval(function() {
+        sound.currentTime = 0;
+        sound.play();
+
+        let sliced = letters.slice(0, counter+1).join('');
+        pElement.innerHTML = sliced;
+
+        counter ++;
+        if (counter >= text.length)
+          clearInterval(timerId);
+      }, 600);                                // 5文字で3秒くらい
+    }
+
+    populateOptions('dragonOptions', eyecatches, '第5話A');
+    selectElement.addEventListener('change', runEyecatch);
+    runEyecatch()
+  </script>
+
+</body>
+</html>
+
