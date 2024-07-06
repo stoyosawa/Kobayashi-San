@@ -81,9 +81,11 @@
       }, 600);                                // 5文字で3秒くらい
     }
 
-    populateOptions('dragonOptions', eyecatches, '第5話A');
-    selectElement.addEventListener('change', runEyecatch);
-    runEyecatch()
+    window.onload = function(evt) {
+      populateOptions('dragonOptions', eyecatches, '第5話A');
+      selectElement.addEventListener('change', runEyecatch);
+      runEyecatch()
+    };
   </script>
 
 </body>
